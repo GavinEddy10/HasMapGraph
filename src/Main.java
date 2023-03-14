@@ -50,7 +50,6 @@ public class Main {
 
 
         //test area
-        g.removeVertex("A");
-        g.print();
+        g.BreadthFirstSort("A");
     }
 }

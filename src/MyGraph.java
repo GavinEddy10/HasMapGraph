@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class MyGraph {
     private int numVertices;
@@ -22,6 +19,37 @@ public class MyGraph {
 
     public int numEdges() {
         return numEdges;
+    }
+
+    public void BreadthFirstSort(String V_start) {
+        Vertex start = getVertexFromString(V_start);
+        Queue<Vertex> vert_queue = new LinkedList<>();
+        //vert_queue.add(); adds to end
+        //vert_queue.poll(); takes first one out
+        //vert_queue.peek(); look at first guy in line but don't take it off
+        ArrayList<VertexPair> moves = new ArrayList<>();//(v1 -> v2), (v1 -> v2);
+
+        while(all_tiles_searched(moves)) {
+
+        }
+
+
+    }
+
+    public boolean all_tiles_searched(ArrayList<VertexPair> moves) {
+        Set<Vertex> vertices = vertices();
+        for (Vertex v: vertices) {//graph key is in moves
+             boolean touched = false;
+             for (VertexPair move: moves) {
+                 Vertex v1 = move.getV1();
+                 Vertex v2 = move.getV2();
+                 if (v.equals(v1) || v.equals(v2))
+                     touched = true;
+             }
+             if (!touched)
+                 return false;
+        }
+        return true;
     }
 
     public void insertVertex(String name) {
@@ -97,22 +125,6 @@ public class MyGraph {
         return edges;
     }
 
-    /*public Edge getEdge(Vertex v1, Vertex v2) {
-        Set<Vertex> vertices = vertices();
-        for (Vertex vertex: vertices) {
-            if (vertex.equals(v1)) {//found vertex in set of keys
-                for (int i = 0; i < graph.get(vertex).size(); i++) {//loop through key graph objects
-                    Vertex gVert = graph.get(vertex).get(i).getV();
-                    if (gVert.getName().equals(v2.getName()))
-                        return graph.get(vertex).get(i).getE();
-                }
-            }
-        }
-        return null;
-    }
-
-     */
-
 
     //add in // v != null && // to each if to prevent null pointer exception
     public String getEdge(String u, String v) {
@@ -157,9 +169,8 @@ public class MyGraph {
             if (vertex.equals(v)) {
                 ArrayList<GraphPairing> pairs = graph.get(vertex);
                 for (GraphPairing pair: pairs) {
-                    if (pair.getE().equals(e)) {
+                    if (pair.getE().equals(e))
                         return pair.getV().toString();
-                    }
                 }
             }
         }
@@ -180,7 +191,7 @@ public class MyGraph {
         return null;
     }
 
-    //same as in degree
+    //same as in degree and out degree
     public int Degree(String vertex) {
         Vertex v = getVertexFromString(vertex);
         ArrayList<GraphPairing> list = graph.get(v);
@@ -219,11 +230,8 @@ public class MyGraph {
                     i--;
                 }
             }
-
         }
-
     }
-
 
     public Vertex getVertexFromString(String str) {
         Set<Vertex> vertices = vertices();

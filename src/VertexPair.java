@@ -7,6 +7,9 @@ public class VertexPair {
         this.v2 = v2;
     }
 
+    public void printVertexPair() {
+        System.out.print("{V1: " + v1.getName() + " --> V2: " + v2.getName() + "} ");
+    }
     public Vertex getV1() {
         return v1;
     }

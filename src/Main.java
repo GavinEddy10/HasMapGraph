@@ -48,8 +48,11 @@ public class Main {
         System.out.println();
         System.out.println();
 
-
+        System.out.println("LLLL");
         //test area
-        g.BreadthFirstSort("A");
+        ArrayList<VertexPair> moves = g.BreadthFirstSort("A");
+        for (VertexPair move : moves) {
+            move.printVertexPair();
+        }
     }
 }

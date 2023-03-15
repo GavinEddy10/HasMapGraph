@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class MyGraph {
@@ -21,35 +22,76 @@ public class MyGraph {
         return numEdges;
     }
 
-    public void BreadthFirstSort(String V_start) {
+    public ArrayList<VertexPair> BreadthFirstSort(String V_start) {
         Vertex start = getVertexFromString(V_start);
         Queue<Vertex> vert_queue = new LinkedList<>();
-        //vert_queue.add(); adds to end
-        //vert_queue.poll(); takes first one out
-        //vert_queue.peek(); look at first guy in line but don't take it off
+        vert_queue.add(start);//vert_queue.add(); adds to end  //vert_queue.poll(); takes first one out //vert_queue.peek(); look at first guy in line but don't take it off
         ArrayList<VertexPair> moves = new ArrayList<>();//(v1 -> v2), (v1 -> v2);
+        Set<Vertex> vertices = vertices();
 
-        while(all_tiles_searched(moves)) {
-
+        while(vertices.size() != 0) {
+            ArrayList<Vertex> neighbors = get_neighbors(vert_queue.peek(), moves);//have neighbors
+            if (neighbors.size() == 0)
+                vertices.remove(vert_queue.peek());
+            for (Vertex neighbor : neighbors) {
+                vert_queue.add(neighbor);
+                moves.add(new VertexPair(vert_queue.peek(), neighbor));
+            }
+            vertices.remove(vert_queue.poll());
         }
-
-
+        return moves;
     }
 
-    public boolean all_tiles_searched(ArrayList<VertexPair> moves) {
+
+    private ArrayList<Vertex> get_neighbors(Vertex origin, ArrayList<VertexPair> seen) {
+        //System.out.println("get_neighbors passed in: " + origin);
         Set<Vertex> vertices = vertices();
-        for (Vertex v: vertices) {//graph key is in moves
-             boolean touched = false;
-             for (VertexPair move: moves) {
-                 Vertex v1 = move.getV1();
-                 Vertex v2 = move.getV2();
-                 if (v.equals(v1) || v.equals(v2))
-                     touched = true;
-             }
-             if (!touched)
-                 return false;
+        ArrayList<Vertex> seen_v1s = vertex_pair_vertexList(seen);
+        ArrayList<Vertex> neighbors = new ArrayList<>();
+
+        for (Vertex vertex: vertices) {
+            //System.out.println("Vertex: " + vertex + "|| Origin: " + origin);
+            if (origin.getName().equals(vertex.getName())) {
+                //System.out.println("RANNN");
+
+                for (int i = 0; i < graph.get(vertex).size(); i++) {
+                    GraphPairing gp = graph.get(vertex).get(i);
+
+                    if (!seen_v1s.contains(gp.getV()))//haven't already seen the vertex
+                        neighbors.add(gp.getV());
+                }
+            }
         }
-        return true;
+
+        return neighbors;
+    }
+
+    //v1 for all vertex pairs
+    private ArrayList<Vertex> vertex_pair_vertexList(ArrayList<VertexPair> moves) {
+        ArrayList<Vertex> list = new ArrayList<>();
+        for (VertexPair move: moves) {
+            list.add(move.getV1());
+        }
+        return list;
+    }
+
+    private boolean all_tiles_searched(ArrayList<VertexPair> moves) {
+        ArrayList<Vertex> seen_v1s = vertex_pair_vertexList(moves);
+        seen_v1s = remove_repeats(seen_v1s);
+        //System.out.println(seen_v1s);
+       // System.out.println("seen v1s size: " + seen_v1s.size());
+        //System.out.println(vertices());
+        //System.out.println("vertices.size: " + vertices().size());
+        return seen_v1s.size() == vertices().size();
+    }
+
+    private ArrayList<Vertex> remove_repeats(ArrayList<Vertex> list) {
+        ArrayList<Vertex> edited = new ArrayList<>();
+        for (Vertex v: list) {
+            if (!edited.contains(v))
+                edited.add(v);
+        }
+        return edited;
     }
 
     public void insertVertex(String name) {

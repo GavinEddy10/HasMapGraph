@@ -48,11 +48,27 @@ public class Main {
         System.out.println();
         System.out.println();
 
-        System.out.println("LLLL");
         //test area
         ArrayList<VertexPair> moves = g.BreadthFirstSort("A");
-        for (VertexPair move : moves) {
+        System.out.println();
+        System.out.println("Breadth Search Output: ");
+        for (VertexPair move: moves) {
             move.printVertexPair();
         }
+        ArrayList<VertexPair> moves2 = g.DepthSearchSort("A");
+        System.out.println("Depth Search OutPut: ");
+        for (VertexPair move : moves2) {
+            move.printVertexPair();
+        }
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        ArrayList<VertexPair> path = g.findPath_BreadthSearch("A", "C");
+        System.out.println("Breadth Search Find: ");
+        for (VertexPair move: path) {
+            move.printVertexPair();
+        }
+
+
     }
 }
